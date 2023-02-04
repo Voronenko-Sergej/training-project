@@ -42,7 +42,7 @@ window.addEventListener('DOMContentLoaded', function () {
     });
 
     //Timer 
-    let dedlain = '2023-01-01';
+    let dedlain = '2023-03-01';
 
     function getTimeRemelding(endtime) {
         let timeDifference = Date.parse(endtime) - Date.parse(Date());
@@ -116,19 +116,21 @@ window.addEventListener('DOMContentLoaded', function () {
             modalWindow = document.querySelector('.modal'),
             btmCloseModal = document.querySelector('[data-close]');
 
-        function OpenModal(btm, itemWindow) {
-            btm.forEach(item => {
-                item.addEventListener('click', () => {
-                    itemWindow.classList.toggle('show');
-                    document.querySelector('body').style.overflow = 'hidden';
-                });
-            });
+        function open() {
+            modalWindow.classList.toggle('show');
+            document.querySelector('body').style.overflow = 'hidden';
         }
 
         let close = function (itemWindow) {
             itemWindow.classList.remove('show');
             document.querySelector('body').style.overflow = '';
         };
+
+        function OpenModal(btm,) {
+            btm.forEach(item => {
+                item.addEventListener('click', open);
+            });
+        }
 
         function closeModal(btm, itemWindow) {
             btm.addEventListener('click', (e) => {
@@ -145,10 +147,30 @@ window.addEventListener('DOMContentLoaded', function () {
                 }
             });
         }
+
+        const openModalEndTime = function (time) {
+            setTimeout(open, time);
+        };
+
+        function openModalScroll() {
+            const scrollHeight = document.documentElement.clientHeight + document.documentElement.scrollTop;
+            const allHeight = document.documentElement.scrollHeight;
+            if (allHeight <= scrollHeight) {
+                openModalEndTime(2000);
+                window.removeEventListener('scroll', openModalScroll);
+            }
+        }
+
+
+
+
+
         closeModal(btmCloseModal, modalWindow);
         closeModal(modalWindow, modalWindow);
         closeModalKey();
         OpenModal(btmOpenWindow, modalWindow);
+        window.addEventListener('scroll', openModalScroll);
+        openModalEndTime(6000);
     }
 
     modal();
